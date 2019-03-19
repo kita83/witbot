@@ -1,0 +1,12 @@
+certifi==2019.3.9
+chardet==3.0.4
+idna==2.8
+prompt-toolkit==2.0.9
+requests==2.21.0
+six==1.12.0
+slackbot==0.5.3
+slacker==0.12.0
+urllib3==1.24.1
+wcwidth==0.1.7
+websocket-client==0.44.0
+wit==5.1.0
