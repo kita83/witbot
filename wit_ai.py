@@ -5,7 +5,7 @@ import json
 from wit import Wit
 
 
-WIT_APIKEY = os.environ("WIT_API_TOKEN")
+WIT_APIKEY = os.environ["WIT_API_TOKEN"]
 
 def main(message):
     client = Wit(access_token=WIT_APIKEY)
