@@ -1,14 +1,11 @@
 import os
 import sys
 import json
-import configparser
 
 from wit import Wit
 
 
-conf = configparser.ConfigParser()
-conf.read(os.path.join(os.path.dirname(__file__), './bot.conf'))
-WIT_APIKEY = conf.get('WIT', 'APIKEY')
+WIT_APIKEY = os.environ("WIT_API_TOKEN")
 
 def main(message):
     client = Wit(access_token=WIT_APIKEY)
