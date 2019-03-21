@@ -10,4 +10,3 @@ DEFAULT_REPLY = "よかよか"
 
 # プラグインスクリプトを置いてあるサブディレクトリ名のリスト
 PLUGINS = ['plugins']
-
