@@ -1,7 +1,7 @@
 import os
 
 
-API_TOKEN = os.environ["SLACK_API_TOKEN"]
+API_TOKEN = os.environ['SLACK_API_TOKEN']
 
 # どの応答にも当てはまらない場合の応答文字列
 DEFAULT_REPLY = "よかよか"

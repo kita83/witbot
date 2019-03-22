@@ -10,11 +10,22 @@ from wit_ai import main
 @respond_to('')
 def mention_func(message):
     resp = main(message.body['text'])
-    entities = resp['entities']
+    resp_entities = resp['entities']
     response = ''
-    for key, value in entities.items():
+    intent = ''
+    entities = {}
+    for key, value in resp_entities.items():
         score = round(value[0]['confidence'], 2) * 100
         response += '[{}] {}({}%)\n'.format(key, value[0]['value'], str(score))
+        if key == 'intent':
+            intent = value[0]['value']['value']
+        else:
+            entities['key'] = value[0]['value']
+
+    if (intent == 'guide_hotel') and ('hotel' in entities):
+        if entities['hotel'][0]['value']['value'] == '積善館':
+            response += '積善館のガイドを初めます。\n'
+            response += '積善館とは...\n'
 
     message.reply(response)
 
