@@ -18,6 +18,7 @@ wcwidth = "==0.1.7"
 wit = "==5.1.0"
 prompt_toolkit = "==2.0.9"
 websocket_client = "==0.44.0"
+pymongo = "*"
 
 [requires]
 python_version = "3.7"
