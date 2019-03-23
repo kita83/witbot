@@ -11,21 +11,27 @@ from wit_ai import main
 def mention_func(message):
     resp = main(message.body['text'])
     resp_entities = resp['entities']
+    print(resp_entities)
     response = ''
     intent = ''
     entities = {}
-    for key, value in resp_entities.items():
-        score = round(value[0]['confidence'], 2) * 100
-        response += '[{}] {}({}%)\n'.format(key, value[0]['value'], str(score))
-        if key == 'intent':
-            intent = value[0]['value']['value']
-        else:
-            entities['key'] = value[0]['value']
+    for key, values in resp_entities.items():
+        for value in values:
+            score = round(value['confidence'], 2) * 100
+            response += '[{}] {}({}%)\n'.format(key, value['value'], str(score))
+            if key == 'intent':
+                intent = value['value']
+            else:
+                if key in entities:
+                    entities[key].append(value['value'])
+                else:
+                    entities[key] = value['value']
 
     if (intent == 'guide_hotel') and ('hotel' in entities):
-        if entities['hotel'][0]['value']['value'] == '積善館':
-            response += '積善館のガイドを初めます。\n'
-            response += '積善館とは...\n'
+        print(entities)
+        if 'はつしろ旅館' in entities['hotel']:
+            response += 'はつしろ旅館のガイドを初めます。\n'
+            response += 'はつしろ旅館とは...\n'
 
     message.reply(response)
 
