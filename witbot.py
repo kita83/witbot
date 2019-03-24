@@ -22,7 +22,7 @@ def get_response(message):
     for key, values in resp['entities'].items():
         for value in values:
             score = round(value['confidence'], 2) * 100
-            response += '{} [{}] ({}%)\n'.format(value['value'], key, str(score))
+            response += '{} ({}:{}%)\n'.format(value['value'], key, str(score))
             if key == 'intent':
                 intent = value['value']
                 if 'metadata' in value:
@@ -36,10 +36,13 @@ def get_response(message):
     entities_ = []
     if metadata and (metadata in entities):
         entities_ = list(entities[metadata])
+        print(entities_)
     mongo_resp = mongo_client.aggregate(intent, entities_)
     if mongo_resp:
         response += '{}のガイドを始めます。\n'.format(mongo_resp[0]['name'])
         response += mongo_resp[0]['description']
+    else:
+        response += 'レスポンスデータ該当なし'
     return response
 
 
