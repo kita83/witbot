@@ -3,20 +3,21 @@ import sys
 import json
 
 from wit import Wit
-from pymongo import MongoClient
+from mongo_client import MongoDB
 
-WIT_APIKEY = os.environ['WIT_API_TOKEN']
-mogno_client = MongoClient('localhost', 27017)
+WIT_APIKEY = os.getenv('WIT_API_TOKEN')
 
 
 def get_response(message):
     wit_client = Wit(access_token=WIT_APIKEY)
     resp = wit_client.message(message)
-    intent = ''
+    intent = {}
     metadata = ''
     response = ''
-    entities = {}
-    print(resp['entities'])
+    entities = resp['entities']
+    if 'intent' in entities:
+        intent = entities.pop('intent')
+    print(resp)
     for key, values in resp['entities'].items():
         for value in values:
             score = round(value['confidence'], 2) * 100
@@ -26,29 +27,18 @@ def get_response(message):
                 if 'metadata' in value:
                     metadata = value['metadata']
             else:
-                if key in entities:
-                    entities[key].append(value['value'])
-                else:
-                    entities[key] = value['value']
+                if key not in entities:
+                    entities[key] = []
+                entities[key].append(value['value'])
 
-    db = mogno_client['witbot']
-    collection = db['guide']
+    mongo_client = MongoDB()
     entities_ = []
     if metadata and (metadata in entities):
         entities_ = list(entities[metadata])
-    result = list(collection.aggregate([
-        {'$match':
-            {'$and': [
-                {'entities': {'$in': entities_}},
-                {'intent': intent}
-                ]
-            }
-        }
-    ]))
-    if result:
-        response += '{}のガイドを初めます。\n'.format('test')
-        response += result[0]['talk']
-
+    mongo_resp = mongo_client.aggregate(intent, entities_)
+    if mongo_resp:
+        response += '{}のガイドを始めます。\n'.format(mongo_resp[0]['name'])
+        response += mongo_resp[0]['description']
     return response
 
 
