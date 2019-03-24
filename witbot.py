@@ -14,9 +14,10 @@ def get_response(message):
     intent = {}
     metadata = ''
     response = ''
-    entities = resp['entities']
-    if 'intent' in entities:
-        intent = entities.pop('intent')
+    entities = {}
+    # entities = resp['entities']
+    # if 'intent' in entities:
+    #     intent = entities.pop('intent')
     print(resp)
     for key, values in resp['entities'].items():
         for value in values:
