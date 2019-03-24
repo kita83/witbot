@@ -3,7 +3,7 @@ import os
 from pymongo import MongoClient
 
 
-MONGO_URI = os.getenv('MONGODB_URI')
+MONGO_URI = os.getenv('MONGO_URI')
 USER = os.getenv('MONGODB_USER')
 PWD = os.getenv('MONGODB_PWD')
 
@@ -12,7 +12,7 @@ class MongoDB:
 
     def __init__(self):
         self.client = MongoClient(MONGO_URI)
-        self.client['witbot'].authenticate(USER, PWD)
+        # self.client['witbot'].authenticate(USER, PWD)
         db = self.client['witbot']
         self.collection = db['guide']
 
