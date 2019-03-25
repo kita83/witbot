@@ -16,10 +16,11 @@ def get_response(message):
 
     entities = {}
     response = ''
+    predict = ''
     for key, values in resp['entities'].items():
         for value in values:
             score = round(value['confidence'], 2) * 100
-            response += '{} ({}:{}%)\n'.format(value['value'], key, str(score))
+            predict += '{} ({}:{}%)\n'.format(value['value'], key, str(score))
             if key == 'intent':
                 intent = value['value']
                 if 'metadata' in value:
@@ -42,8 +43,12 @@ def get_response(message):
         response += '------------------------------------------------------\n'
         response += '{}のガイドを始めます。\n'.format(mongo_resp[0]['name'])
         response += mongo_resp[0]['description']
+        response += '\n'
+        response += predict
     else:
         response += '何だそれ😇'
+        response += '\n'
+        response += predict
     return response
 
 
