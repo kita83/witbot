@@ -14,6 +14,7 @@ def get_response(message):
     if 'entities' not in resp:
         return ''
 
+    entities = {}
     response = ''
     for key, values in resp['entities'].items():
         for value in values:
@@ -28,11 +29,11 @@ def get_response(message):
                     entities[key] = []
                 entities[key].append(value['value'])
 
-    if metadata and (metadata in key_list):
+    if metadata and (metadata in entities):
         entities_ = list(entities[metadata])
 
     mongo_client = MongoDB()
-    mongo_resp = mongo_client.aggregate(intent, key_list)
+    mongo_resp = mongo_client.aggregate(intent, entities_)
     if mongo_resp:
         response += '------------------------------------------------------\n'
         response += '{}のガイドを始めます。\n'.format(mongo_resp[0]['name'])
