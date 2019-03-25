@@ -31,7 +31,10 @@ def get_response(message):
 
     # if metadata and (metadata in entities):
     #     entities_ = list(entities[metadata])
-    entities_ = [entity['value'] for entity in resp['entities'] if entity['value'] != 'intent']
+    entities_ = []
+    for entity in entities.values():
+        for v in entity:
+            entities_.append(v)
 
     mongo_client = MongoDB()
     mongo_resp = mongo_client.aggregate(intent, entities_)
