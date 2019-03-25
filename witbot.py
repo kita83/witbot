@@ -11,14 +11,10 @@ WIT_APIKEY = os.getenv('WIT_API_TOKEN')
 def get_response(message):
     wit_client = Wit(access_token=WIT_APIKEY)
     resp = wit_client.message(message)
-    intent = {}
-    metadata = ''
+    if 'entities' not in resp:
+        return ''
+
     response = ''
-    entities = {}
-    # entities = resp['entities']
-    # if 'intent' in entities:
-    #     intent = entities.pop('intent')
-    print(resp)
     for key, values in resp['entities'].items():
         for value in values:
             score = round(value['confidence'], 2) * 100
@@ -32,17 +28,17 @@ def get_response(message):
                     entities[key] = []
                 entities[key].append(value['value'])
 
-    mongo_client = MongoDB()
-    entities_ = []
-    if metadata and (metadata in entities):
+    if metadata and (metadata in key_list):
         entities_ = list(entities[metadata])
-        print(entities_)
-    mongo_resp = mongo_client.aggregate(intent, entities_)
+
+    mongo_client = MongoDB()
+    mongo_resp = mongo_client.aggregate(intent, key_list)
     if mongo_resp:
+        response += '------------------------------------------------------\n'
         response += '{}のガイドを始めます。\n'.format(mongo_resp[0]['name'])
         response += mongo_resp[0]['description']
     else:
-        response += 'レスポンスデータ該当なし'
+        response += '何だそれ😇'
     return response
 
 
