@@ -30,8 +30,6 @@ def get_response(message):
                     entities[key] = []
                 entities[key].append(value['value'])
 
-    # if metadata and (metadata in entities):
-    #     entities_ = list(entities[metadata])
     entities_ = []
     for entity in entities.values():
         for v in entity:
@@ -40,13 +38,12 @@ def get_response(message):
     mongo_client = MongoDB()
     mongo_resp = mongo_client.aggregate(intent, entities_)
     if mongo_resp:
-        response += '------------------------------------------------------\n'
         response += '{}のガイドを始めます。\n'.format(mongo_resp[0]['name'])
         response += mongo_resp[0]['description']
-        response += '\n'
+        response += '\n------------------------------------------------------\n'
         response += predict
     else:
-        response += '何だそれ😇'
+        response += 'それ何だっけ😇'
         response += '\n'
         response += predict
     return response
