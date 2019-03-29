@@ -23,8 +23,6 @@ def get_response(message):
             predict += '{} ({}:{}%)\n'.format(value['value'], key, str(score))
             if key == 'intent':
                 intent = value['value']
-                if 'metadata' in value:
-                    metadata = value['metadata']
             else:
                 if key not in entities:
                     entities[key] = []
